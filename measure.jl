@@ -33,7 +33,8 @@ end
 # TODO: 
 function spin_stiffness(H::NNXY, mc_state::MCState, beta::Float64)
     # in the x direction (only taking left/right neighbours)
-    # my convention: neighbours[1] = right, neighbours[2] = left
+    # my convention: neighbours[3] = right, neighbours[4] = left
+    # ONLY GOOD FOR PBCs RIGHT NOW!!!!
     angle_config = mc_state.angle_config
     neighbours = mc_state.neighbours
     Ns = nspins(H)
@@ -41,7 +42,7 @@ function spin_stiffness(H::NNXY, mc_state::MCState, beta::Float64)
     cos_term = 0.
     sin_term = 0.
     for site in 1:Ns
-        right, left = neighbours[site][1], neighbours[site][2]
+        right, left = neighbours[site][3], neighbours[site][4]
         cos_term += cos(angle_config[site] - right) + cos(angle_config[site] - left)
         sin_term += sin(angle_config[site] - right) + sin(angle_config[site] - left)
     end
@@ -50,7 +51,7 @@ function spin_stiffness(H::NNXY, mc_state::MCState, beta::Float64)
     cos_term /= 2
     sin_term /= 2
 
-    return (cos_term - beta*sin_term^2) / Ns
+    return (cos_term - (sin_term^2)*beta) / Ns
 end
 
 stats_dict(x::Vector{Float64}) = stats_dict(identity, x)

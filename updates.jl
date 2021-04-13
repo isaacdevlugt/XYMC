@@ -31,14 +31,14 @@ function single_rotation_update!(H::NNXY, mc_state::MCState, dtheta::Float64, β
     end
 end
 
-upper_neighbour_periodic(dims::NTuple{2,Int}, site::Int) = mod(site + dims[1], prod(dims))
-upper_neighbour(dims::NTuple{2,Int}, site::Int) = site + dims[1]
+upper_neighbour_periodic(dims::NTuple{2,Int}, site::Int) = site + dims[1] > prod(dims) ? mod(site + dims[1], prod(dims)) : site + dims[1]
+#upper_neighbour(dims::NTuple{2,Int}, site::Int) = site + dims[1]
 
-lower_neighbour_periodic(dims::NTuple{2,Int}, site::Int) = site == dims[1] ? prod(dims) : mod(site - dims[1], prod(dims))
-lower_neighbour(dims::NTuple{2,Int}, site::Int) = site - dims[1]
+lower_neighbour_periodic(dims::NTuple{2,Int}, site::Int) = site <= dims[1] ? site + prod(dims) - dims[1] : site - dims[1]
+#lower_neighbour(dims::NTuple{2,Int}, site::Int) = site - dims[1]
 
-right_neighbour_periodic(dims::NTuple{2,Int}, site::Int) = site - dims[1] + 1
-right_neighbour(dims::NTuple{2,Int}, site::Int) = site + 1
+right_neighbour_periodic(dims::NTuple{2,Int}, site::Int) = mod(site, dims[1]) == 0 ? site - dims[1] + 1 : site + 1
+#right_neighbour(dims::NTuple{2,Int}, site::Int) = site + 1
 
-left_neighbour_periodic(dims::NTuple{2,Int}, site::Int) = site + dims[1] - 1
-left_neighbour(dims::NTuple{2,Int}, site::Int) = site - 1
+left_neighbour_periodic(dims::NTuple{2,Int}, site::Int) = mod(site-1, dims[1]) == 0 ? site + dims[1] - 1 : site - 1
+#left_neighbour(dims::NTuple{2,Int}, site::Int) = site - 1

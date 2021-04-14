@@ -11,7 +11,6 @@ function MCState(H::AbstractXY)
     Ns = nspins(H)
     angle_config = rand(Uniform(0, 2π), Ns)
     neighbours = nearest_neighbours(H.dims)
-
     return MCState(angle_config, neighbours)
 end
 
@@ -42,3 +41,23 @@ function nearest_neighbours(dims::NTuple{2,Int})
     end
     return bonds
 end
+
+#=
+function unique_axial_bonds(neighbours::Array{Array{Int64,1},1})
+    # axis taken is the x-axis
+    N = length(neighbours)
+    
+    unique_bonds = [Int[] for _ in 1:2*N]
+    for i in 1:2*N
+        # get left and right neighbours
+        axial_bonds = sort([i, neighbours[i][3]]), sort([i, neighbours[i][4]])
+        @show typeof(axial_bonds[1])
+        @show typeof(unique_bonds[i])
+        unique_bonds[i] = axial_bonds
+        push!(axial_bonds[1], unique_bonds[i])
+        push!(axial_bonds[2], unique_bonds[i])
+    end
+    @show unique_bonds
+    return unique(unique_bonds)
+end
+=#

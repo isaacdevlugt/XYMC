@@ -20,10 +20,10 @@ function energy(H::NNXY, mc_state::MCState)
     
     E = 0.
     for i in 1:Ns
-        θ = angle_config[i]
+        θi = angle_config[i]
         θ_NNs = angle_config[neighbours[i]]
-        for ϕ in θ_NNs
-            E += -cos(θ - ϕ)
+        for θj in θ_NNs
+            E += -cos(θi - θj)
         end
     end
 
@@ -33,8 +33,9 @@ end
 # TODO: 
 function spin_stiffness(H::NNXY, mc_state::MCState, beta::Float64)
     # in the x direction (only taking left/right neighbours)
-    # my convention: neighbours[3] = right, neighbours[4] = left
-    # ONLY GOOD FOR PBCs RIGHT NOW!!!!
+    # my convention: 
+    # neighbours[1] = up, neighbours[2] = down
+    # neighbours[3] = right, neighbours[4] = left
     angle_config = mc_state.angle_config
     neighbours = mc_state.neighbours
     Ns = nspins(H)
@@ -42,14 +43,10 @@ function spin_stiffness(H::NNXY, mc_state::MCState, beta::Float64)
     cos_term = 0.
     sin_term = 0.
     for site in 1:Ns
-        right, left = neighbours[site][3], neighbours[site][4]
-        cos_term += cos(angle_config[site] - right) + cos(angle_config[site] - left)
-        sin_term += sin(angle_config[site] - right) + sin(angle_config[site] - left)
+        right = neighbours[site][3] 
+        cos_term += cos(angle_config[site] - angle_config[right])
+        sin_term += sin(angle_config[site] - angle_config[right])
     end
-
-    # over-counted pairs in the above loop by 2
-    cos_term /= 2
-    sin_term /= 2
 
     return (cos_term - (sin_term^2)*beta) / Ns
 end

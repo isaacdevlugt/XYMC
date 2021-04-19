@@ -5,6 +5,7 @@
 using DataStructures
 using Statistics
 using DelimitedFiles
+using Distributions
 using Random
 
 include("mc_state.jl")
@@ -20,18 +21,18 @@ function ΔE(mc_state::MCState, site::Int, dtheta::Float64)
     return dE
 end
 
-function single_rotation_update!(H::NNXY, mc_state::MCState, dtheta::Float64, β::Float64)
+function single_rotation_update!(H::NNXY, mc_state::MCState, β::Float64)
     N = nspins(H)
     angle_config = mc_state.angle_config
     # sweep over all sites
     shuffled_sites = collect(1:N)[randperm(N)]
     for site in shuffled_sites
-        dtheta *= rand((-1,1)) # randomly choose to rotate CW or CCW
+        #dtheta *= rand((-1,1)) # randomly choose to rotate CW or CCW
+        dtheta = rand(Uniform(-pi,pi))
         Ediff = ΔE(mc_state, site, dtheta)
 
-        if rand() < min(1, exp(-β*Ediff))
+        if rand() < exp(-β*Ediff)
             angle_config[site] += dtheta
-            angle_config[site] = mod(angle_config[site], 2π)
         end
     end
 end

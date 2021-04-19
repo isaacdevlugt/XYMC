@@ -1,9 +1,9 @@
 #!/bin/bash
 
-for L in 10 12 16 20 24 30 40 50
+for L in 12 16 20 24
 do
-    for b in $(seq 1.01 0.005 1.2)
+    for b in $(seq 1.105 0.005 1.21)
     do
-        julia main.jl $L -n 1000000 -s 10 --beta $b
+        julia main.jl $L -n 1000000 --beta $b
     done
 done

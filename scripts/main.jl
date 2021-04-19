@@ -35,7 +35,7 @@ function init_mc(parsed_args)
     else
         dtheta = 0.8
     end 
-    =#
+    
     if -1 <= t <= -0.5
         dtheta = 0.05
     elseif -0.5 < t <= 0.5
@@ -45,6 +45,7 @@ function init_mc(parsed_args)
     else
         dtheta = 0.5
     end 
+    =#
 
     Random.seed!(seed)
     H = NNXY((L, L)) # easier to use PBC for calculating spin stiffness
@@ -54,9 +55,11 @@ function init_mc(parsed_args)
     EQ_MCS = div(MCS, 10)
     skip = parsed_args["skip"]
     
-    mc_opts = (MCS, EQ_MCS, skip, beta, dtheta)
+    #mc_opts = (MCS, EQ_MCS, skip, beta, dtheta)
+    mc_opts = (MCS, EQ_MCS, skip, beta)
 
-    d = (L=L, dtheta=dtheta, beta=beta, seed=seed)
+    #d = (L=L, dtheta=dtheta, beta=beta, seed=seed)
+    d = (L=L, beta=beta, seed=seed)
     sname = savename(d; digits = 4)
 
     return H, mc_state, mc_opts, sname
@@ -65,14 +68,16 @@ end
 
 function run(parsed_args)
     H, mc_state, mc_opts, sname = init_mc(parsed_args)
-    MCS, EQ_MCS, skip, beta, dtheta = mc_opts
+    #MCS, EQ_MCS, skip, beta, dtheta = mc_opts
+    MCS, EQ_MCS, skip, beta = mc_opts
 
     energies = zeros(Float64, MCS)
     energies_sqr = zeros(Float64, MCS)
 
     ρs = zeros(Float64, MCS)
 
-    println("Running $(typeof(H)), L=$(H.dims[1]), beta=$beta, dtheta=$dtheta")
+    #println("Running $(typeof(H)), L=$(H.dims[1]), beta=$beta, dtheta=$dtheta")
+    println("Running $(typeof(H)), L=$(H.dims[1]), beta=$beta")
     # equil
     for i in 1:EQ_MCS
         single_rotation_update!(H, mc_state, dtheta, beta)

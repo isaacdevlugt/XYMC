@@ -16,7 +16,6 @@ function energy(H::NNXY, mc_state::MCState)
     angle_config = mc_state.angle_config
     neighbours = mc_state.neighbours
     Ns = nspins(H)
-    z = H.dims isa NTuple ? 4. : 2. # coordination number
     
     E = 0.
     for i in 1:Ns
@@ -27,7 +26,8 @@ function energy(H::NNXY, mc_state::MCState)
         end
     end
 
-    return E / (z*Ns)
+    # we over-counted pairs by a factor of 2
+    return E / (2*Ns)
 end
 
 # TODO: 

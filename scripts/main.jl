@@ -80,17 +80,20 @@ function run(parsed_args)
     println("Running $(typeof(H)), L=$(H.dims[1]), beta=$beta")
     # equil
     for i in 1:EQ_MCS
-        single_rotation_update!(H, mc_state, dtheta, beta)
+        #single_rotation_update!(H, mc_state, dtheta, beta)
+        single_rotation_update!(H, mc_state, beta)
     end
 
     for i in 1:MCS
-        single_rotation_update!(H, mc_state, dtheta, beta)
+        #single_rotation_update!(H, mc_state, dtheta, beta)
+        single_rotation_update!(H, mc_state, beta)
         energies[i] = energy(H, mc_state)
         energies_sqr[i] = energies[i]^2
         ρs[i] = spin_stiffness(H, mc_state, beta)
 
         for _ in 1:skip
-            single_rotation_update!(H, mc_state, dtheta, beta)
+            #single_rotation_update!(H, mc_state, dtheta, beta)
+            single_rotation_update!(H, mc_state, beta)
         end
     end
 

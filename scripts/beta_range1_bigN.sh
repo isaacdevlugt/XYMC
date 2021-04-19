@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for L in 12 16
+for L in 20 24
 do
     for b in $(seq 0.9 0.005 1)
     do

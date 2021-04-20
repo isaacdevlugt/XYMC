@@ -2,9 +2,6 @@
 # wolff
 # single spin flip
 
-using DataStructures
-using Statistics
-using DelimitedFiles
 using Distributions
 using Random
 

@@ -1,6 +1,5 @@
 # 2D XY Model PBC
 # TODO: OBC
-using LinearAlgebra
 
 abstract type AbstractXY end
 
